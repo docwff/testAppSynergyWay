@@ -5,7 +5,7 @@
 ## How to run
 The root folder of the application contains file **deployDocker**
 - Make sure you have docker installed and running on your machine.
-<br>
+  <br>
 <small>Open terminal from root path of api and execute next command ```sh deployDocker``` <small/>
 
 Also root folder contain postman collection json file <a>testAppSynergyWayColection.postman_collection.json</a> which contains all endpoints and tests <a></a>
