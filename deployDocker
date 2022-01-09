@@ -1,0 +1,17 @@
+#!/bin/sh
+
+containerDBName="db"
+time=15
+
+if [ "$(docker container inspect -f '{{.State.Running}}' $containerDBName)" = "true" ];
+  then
+    echo "$containerDBName running..."
+  else docker-compose up -d db
+    echo "db creation process... $time sec"
+    sleep $time
+fi
+
+mvn clean package
+docker-compose up -d --build backend
+docker image prune -f
+echo "successfully..."

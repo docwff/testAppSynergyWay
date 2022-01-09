@@ -1,0 +1,661 @@
+{
+	"info": {
+		"_postman_id": "4ba17a99-5237-4148-b272-8c8769739700",
+		"name": "testAppSynergyWayColection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "flight",
+			"item": [
+				{
+					"name": "findByCompanyAndStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches not empty array\", function () {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json).to.be.an(\"array\").and.not.empty;",
+									"});",
+									"",
+									"pm.test(\"Status of first object is ACTIVE\", function () {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json[0].status).equals(\"ACTIVE\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hostPort}}flight/findByCompanyAndStatus?airCompanyId=2&flightStatusId=1",
+							"host": [
+								"{{hostPort}}flight"
+							],
+							"path": [
+								"findByCompanyAndStatus"
+							],
+							"query": [
+								{
+									"key": "airCompanyId",
+									"value": "2"
+								},
+								{
+									"key": "flightStatusId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findCompletedFlightsWithDelays",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches not empty object\", function () {",
+									"  const json = pm.response.json();",
+									"  pm.expect(json).to.be.an(\"object\").and.not.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hostPort}}flight/findCompletedFlightsWithDelays/page/0",
+							"host": [
+								"{{hostPort}}flight"
+							],
+							"path": [
+								"findCompletedFlightsWithDelays",
+								"page",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findActiveFlightsThatDepartedDayAgo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches not empty object\", function () {",
+									"  const json = pm.response.json();",
+									"  pm.expect(json).to.be.an(\"object\").and.not.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hostPort}}flight/findActiveFlightsThatDepartedDayAgo/page/0",
+							"host": [
+								"{{hostPort}}flight"
+							],
+							"path": [
+								"findActiveFlightsThatDepartedDayAgo",
+								"page",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"const reqJson = JSON.parse(pm.request.body.raw);",
+									"",
+									"pm.test(\"Body matches not empty object\", function () {",
+									"    pm.expect(responseJson).to.be.an(\"object\").and.not.empty;",
+									"});",
+									"",
+									"pm.test(\"new status id equals from request param\", function () {",
+									"    pm.expect(responseJson.status.id).equal(reqJson.flightStatusId);",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"flightId\": 1,\n    \"flightStatusId\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostPort}}flight/changeStatus",
+							"host": [
+								"{{hostPort}}flight"
+							],
+							"path": [
+								"changeStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"  const responseJson = pm.response.json();",
+									"    const reqJson = JSON.parse(pm.request.body.raw);",
+									"",
+									"",
+									"pm.test(\"Body matches not empty object\", function () {",
+									"  pm.expect(responseJson).to.be.an(\"object\").and.not.empty;",
+									"});",
+									"",
+									"pm.test(\"created status is PENDING\", function () {",
+									"    pm.expect(responseJson.status.name).equal(\"PENDING\");",
+									"});",
+									"",
+									"pm.test(\"created airplaneId qeuals from request\", function () {",
+									"    pm.expect(responseJson.airplane.id).equal(reqJson.airplaneId);",
+									"});",
+									"",
+									"pm.test(\"created departureCountry equals from request param\", function () {",
+									"    pm.expect(responseJson.departureCountry.id).equal(reqJson.departureCountryId);",
+									"});",
+									"",
+									"pm.test(\"created destinationCountry equals from request param\", function () {",
+									"    pm.expect(responseJson.destinationCountry.id).equal(reqJson.destinationCountryId);",
+									"});",
+									"",
+									"pm.test(\"param createdAt is present\", function () {",
+									"    pm.expect(responseJson.airplane.createdAt) != null;",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"airplaneId\": 4,\n    \"destinationCountryId\": 52,\n    \"departureCountryId\": 12,\n    \"distance\": 549230,\n    \"estimatedFlightTime\": \"01:14:32\",\n    \"departure\": null,\n    \"arrived\": null,\n    \"delay\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostPort}}flight/create",
+							"host": [
+								"{{hostPort}}flight"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "airplane",
+			"item": [
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 = CREATED\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"const reqJson = JSON.parse(pm.request.body.raw);",
+									"",
+									"",
+									"pm.test(\"Body matches not empty object\", function () {",
+									"    pm.expect(responseJson).to.be.an(\"object\").and.not.empty;",
+									"});",
+									"",
+									"pm.test(\"factory id equals to request param\", function () {",
+									"    pm.expect(responseJson.factory.id).equal(reqJson.factoryId);",
+									"});",
+									"",
+									"pm.test(\"serialNumber equals to request param\", function () {",
+									"    pm.expect(responseJson.serialNumber).equal(reqJson.serialNumber);",
+									"});",
+									"",
+									"pm.test(\"type id equals from request param\", function () {",
+									"    pm.expect(responseJson.type.id).equal(reqJson.airplaneTypeId);",
+									"});",
+									"",
+									"if (reqJson.airCompanyId != null) {",
+									"    pm.test(\"company id equals to request param\", function () {",
+									"        pm.expect(responseJson.company.id).equal(reqJson.airCompanyId);",
+									"    });",
+									"} else {",
+									"    pm.test(\"company is NULL because no request param present\", function () {",
+									"        pm.expect(responseJson.company) === null;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Airbus 343\",\n    \"airCompanyId\": null,\n    \"factoryId\": 32,\n    \"flightDistance\": 6500,\n    \"numberOfFlights\": 23,\n    \"fuelCapacity\": 50000,\n    \"serialNumber\": \"FXO25623\",\n    \"airplaneTypeId\": 6\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostPort}}airplane/create",
+							"host": [
+								"{{hostPort}}airplane"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reAssign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"const reqJson = JSON.parse(pm.request.body.raw);",
+									"",
+									"pm.test(\"company id changed successfully\", function () {",
+									"    pm.expect(responseJson.company.id).equal(reqJson.newAirCompanyId);",
+									"    pm.expect(responseJson.id).equal(reqJson.airplaneId);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"airplaneId\": 7,\n    \"newAirCompanyId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostPort}}airplane/reAssign",
+							"host": [
+								"{{hostPort}}airplane"
+							],
+							"path": [
+								"reAssign"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "airCompany",
+			"item": [
+				{
+					"name": "findAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches not empty array list\", function () {",
+									"  const json = pm.response.json();",
+									"  pm.expect(json).to.be.an(\"array\").not.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hostPort}}airCompany/findAll",
+							"host": [
+								"{{hostPort}}airCompany"
+							],
+							"path": [
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test(\"Body matches not empty object\", function () {",
+									"    pm.expect(json).to.be.an(\"object\").not.empty;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hostPort}}airCompany/id/1",
+							"host": [
+								"{{hostPort}}airCompany"
+							],
+							"path": [
+								"id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createOrGet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"const reqJson = JSON.parse(pm.request.body.raw);",
+									"",
+									"pm.test(\"Body matches not null object\", function () {",
+									"    pm.expect(responseJson).to.be.an(\"object\").not.empty;",
+									"});",
+									"",
+									"pm.test(\"name equals to request param\", function () {",
+									"    pm.expect(responseJson.name).equal(reqJson.name);",
+									"});",
+									"",
+									"pm.test(\"airCompanyType id equals to request param\", function () {",
+									"    pm.expect(responseJson.airCompanyType.id).equal(reqJson.airCompanyTypeId);",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Airbus 72/1\",\n    \"airCompanyTypeId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostPort}}airCompany/createOrGet",
+							"host": [
+								"{{hostPort}}airCompany"
+							],
+							"path": [
+								"createOrGet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code one of 200, 400\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"const reqJson = JSON.parse(pm.request.body.raw);",
+									"",
+									"if (pm.response.code === 200) {",
+									"    pm.test(\"status 200 type and name is changed \", function () {",
+									"        pm.expect(responseJson.airCompanyType.id).equal(reqJson.airCompanyTypeId)",
+									"    });",
+									"}",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.expect(responseJson).to.be.an(\"object\").not.empty;",
+									"    if (pm.response.code === 400) {",
+									"        pm.expect(responseJson).to.be.an(\"object\").not.empty;",
+									"        pm.test(\"exception class s correct\", function () {",
+									"            pm.expect(pm.response.text()).to.include(\"EntityExistsException\");",
+									"        });",
+									"    }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Airbus 72322\",\n    \"airCompanyTypeId\": 1,\n    \"airCompanyId\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostPort}}airCompany/update",
+							"host": [
+								"{{hostPort}}airCompany"
+							],
+							"path": [
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code one of 204, 400\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([204, 400]);",
+									"});",
+									"",
+									"if (pm.response.code === 400) {",
+									"    pm.test(\"status BAD REQUEST  and error EmptyResultDataAccessException\", function () {",
+									"        var json = pm.response.json();",
+									"",
+									"        pm.expect(json.status).equal(\"BAD_REQUEST\");",
+									"        pm.expect(json.error).equal(\"EmptyResultDataAccessException\");",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{hostPort}}airCompany/delete?id=6",
+							"host": [
+								"{{hostPort}}airCompany"
+							],
+							"path": [
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "hostPort",
+			"value": "http://localhost:8081/"
+		}
+	]
+}
